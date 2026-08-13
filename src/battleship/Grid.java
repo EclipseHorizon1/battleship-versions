@@ -50,7 +50,7 @@ class MyCanvas extends JPanel {
 		playerGrid[1][2] = 1;
 	
 	}
-
+	//Creating the each ship as an object
 	Ship patrolBoat = new Ship("Patrol Boat", 2, 0);
 	Ship submarine = new Ship("Submarine", 3, 0);
 	Ship destroyer = new Ship("Destroyer", 3, 0);

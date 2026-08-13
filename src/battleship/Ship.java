@@ -21,7 +21,7 @@ public class Ship {
 		Lenght = shipLenght;
 		Hits = shipHits;
 	}
-	
+	//setting the parameters for the ships
 
 }
 
