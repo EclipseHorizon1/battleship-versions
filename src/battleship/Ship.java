@@ -22,6 +22,6 @@ public class Ship {
 		Hits = shipHits;
 	}
 	//setting the parameters for the ships
-
+	//trying to push branch master
 }
 

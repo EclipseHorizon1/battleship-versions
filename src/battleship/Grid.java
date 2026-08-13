@@ -51,6 +51,7 @@ class MyCanvas extends JPanel {
 	
 	}
 	//Creating the each ship as an object
+	//trying to push branch master
 	Ship patrolBoat = new Ship("Patrol Boat", 2, 0);
 	Ship submarine = new Ship("Submarine", 3, 0);
 	Ship destroyer = new Ship("Destroyer", 3, 0);
