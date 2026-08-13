@@ -51,10 +51,20 @@ class MyCanvas extends JPanel {
 	
 	}
 
+	Ship patrolBoat = new Ship("Patrol Boat", 2, 0);
+	Ship submarine = new Ship("Submarine", 3, 0);
+	Ship destroyer = new Ship("Destroyer", 3, 0);
+	Ship battleship = new Ship("Battleship", 4, 0);
+	Ship aircraftCarrier = new Ship("Aircraft Carrier", 5, 0);
+	
+	
 	public void actionPerformed(ActionEvent e) {
 
 		// actions go here
-		
+		 {
+			 
+			
+		}
 		
 
 	}
