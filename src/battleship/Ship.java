@@ -4,24 +4,23 @@ public class Ship {
 
 	
 	
-	String Name;
-	int Lenght;
-	int Hits;
+	String name;
+	int length;
+	int hits;
 	
 	public Ship(){
-		Name = "";
-		Lenght = 0;
-		Hits = 0;
+		name = "";
+		length = 0;
+		hits = 0;
 		
 	}
 	
-	public Ship(String shipName,int shipLenght,int shipHits) {
+	public Ship(String shipName,int shipLength,int shipHits) {
 		
-		Name = shipName; 
-		Lenght = shipLenght;
-		Hits = shipHits;
+		name = shipName; 
+		length = shipLength;
+		hits = shipHits;
 	}
 	//setting the parameters for the ships
-	//trying to push branch master
-}
+	}
 
