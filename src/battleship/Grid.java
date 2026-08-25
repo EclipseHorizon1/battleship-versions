@@ -4,11 +4,12 @@ import java.awt.*;
 
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
+import javax.swing.JTextField;
 import javax.swing.JFrame;
 
 import java.awt.event.*;
 
-class MyCanvas extends JPanel {
+class MyCanvas extends JPanel implements ActionListener {
 
 	// declare variables here
 
@@ -19,8 +20,11 @@ class MyCanvas extends JPanel {
 	int playerGridOffset; // start of x axis for the player's and opponent's grid
 	int opponentGridOffset;
 	int gridsYoffset; // start of Y axis for both grids so they are aligned.
-
-	JComboBox<String> shipDropdown; //declare that this is the variable for the drop down and it will contain strings.
+	int selectedShipLength;
+	JComboBox<Ship> shipDropdown; // declare that this is the variable for the drop down and it will contain
+									// strings.
+	JTextField rowTextField; // declare that these will be text fields.
+	JTextField columnTextField;
 
 	public void init() {
 
@@ -48,24 +52,39 @@ class MyCanvas extends JPanel {
 		playerGrid[1][0] = 1;
 		playerGrid[2][1] = 1;
 		playerGrid[1][2] = 1;
-		
-		setLayout(null); //this is here so that it doesn't use the default coordinates of the system for the drop down.
-						//it allows me to place my own custom position.
-		
-		shipDropdown = new JComboBox<String>(); // Creates a new drop down.
 
-		shipDropdown.addItem("Patrol Boat");  //These lines add each ship to the drop down.
-		shipDropdown.addItem("Submarine");
-		shipDropdown.addItem("Destroyer");
-		shipDropdown.addItem("Battleship");
-		shipDropdown.addItem("Aircraft Carrier");
+		setLayout(null); // this is here so that it doesn't use the default coordinates of the system for
+							// the drop down.
+							// it allows me to place my own custom position.
 
-		
-		shipDropdown.setBounds(100, 100, 200, 30); //Here are the custom size and position of the drop down.
-		add(shipDropdown); //This adds the drop down to the window
-		
-		revalidate(); // This tells the internal system that there is a new drop down, so it needs to recalculate the stuff.
+		shipDropdown = new JComboBox<Ship>(); // Creates a new drop down.
+
+		shipDropdown.addItem(patrolBoat); // These lines add each ship to the drop down.
+		shipDropdown.addItem(submarine);
+		shipDropdown.addItem(destroyer);
+		shipDropdown.addItem(battleship);
+		shipDropdown.addItem(aircraftCarrier);
+
+		shipDropdown.setBounds(50, 100, 200, 30); // Here are the custom size and position of the drop down.
+		shipDropdown.addActionListener(this); // this calls on the action listener methods to do something.
+		add(shipDropdown); // This adds the drop down to the window
+
+		rowTextField = new JTextField(); // This adds the text fields and determines the bakcground,bounds and location
+		rowTextField.setBackground(new Color(230, 230, 230));
+		rowTextField.setBounds(50, 160, 200, 40);
+		rowTextField.addActionListener(this);
+		add(rowTextField);
+
+		columnTextField = new JTextField();// this does the same a the row text field.
+		columnTextField.setBackground(new Color(230, 230, 230));
+		columnTextField.setBounds(50, 210, 200, 40);
+		columnTextField.addActionListener(this);
+		add(columnTextField);
+
+		revalidate(); // This tells the internal system that there is a new drop down, so it needs to
+						// recalculate the stuff.
 		repaint(); // This paints the drop down on the window.
+
 	}
 	// Creating the each ship as an object
 
@@ -80,9 +99,9 @@ class MyCanvas extends JPanel {
 		// actions go here
 		{
 
-			
-			
-			
+			selectedShipLength = ((Ship) shipDropdown.getSelectedItem()).shipLength();
+			System.out.println(selectedShipLength);
+
 		}
 
 	}
@@ -151,7 +170,7 @@ public class Grid {
 
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		// window.setBounds(30, 30, 1330, 600); // Use this to change the window size
+		window.setBounds(30, 30, 1330, 600); // Use this to change the window size
 
 		window.setExtendedState(JFrame.MAXIMIZED_BOTH); // Use this to make the window full screen automatically
 

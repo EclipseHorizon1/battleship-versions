@@ -2,25 +2,35 @@ package battleship;
 
 public class Ship {
 
-	
-	
 	String name;
 	int length;
 	int hits;
-	
-	public Ship(){
+
+	public Ship() {
 		name = "";
 		length = 0;
 		hits = 0;
-		
+
 	}
-	
-	public Ship(String shipName,int shipLength,int shipHits) {
-		
-		name = shipName; 
+
+	public Ship(String shipName, int shipLength, int shipHits) {
+
+		name = shipName;
 		length = shipLength;
 		hits = shipHits;
 	}
-	//setting the parameters for the ships
-	}
+	// setting the parameters for the ships
 
+	public int shipLength() {
+		return length;
+	}
+	
+	@Override
+public String toString() {
+	
+	return name;
+	
+}
+
+
+}
