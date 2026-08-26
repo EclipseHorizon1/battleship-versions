@@ -26,6 +26,12 @@ class MyCanvas extends JPanel implements ActionListener {
 	JTextField rowTextField; // declare that these will be text fields.
 	JTextField columnTextField;
 
+	int xShipCoordinate;
+	int yShipCoordinate;
+
+	String xInput;
+	String yInput;
+
 	public void init() {
 
 		// instantiate your variables here
@@ -97,12 +103,46 @@ class MyCanvas extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		// actions go here
-		{
+
+		if (e.getSource() == shipDropdown) {
 
 			selectedShipLength = ((Ship) shipDropdown.getSelectedItem()).shipLength();
 			System.out.println(selectedShipLength);
-
 		}
+
+		// This block of code above checks if the input was on the dropdown, then it
+		// converts the string to int and stores in the variable.
+
+		if (e.getSource() == rowTextField) {
+
+			String xInput = rowTextField.getText();
+			int xShipCoordinate = Integer.parseInt(xInput);
+
+			System.out.println(xShipCoordinate);
+
+			if (xShipCoordinate >= 1 && xShipCoordinate <= 10) {
+				System.out.println("Valid");
+			} else {
+
+				System.out.println("Invalid");
+			}
+		}
+
+		// this block of code above checks if the input was on the row text field, it
+		// converts the string to an int, then prints the number on the console
+		// It also checks if the input number was valid or invalid.
+
+		if (e.getSource() == columnTextField) {
+
+			String yInput = columnTextField.getText();
+			int yShipCoordinate = Integer.parseInt(yInput);
+			System.out.println(yShipCoordinate);
+		}
+
+		// This block of code above checks if the input was on the column text field, it
+		// currently converts string to int, and prints the number on the
+		// console. later i will need to make it convert back to string to check if
+		// valid, then convert back to a int. Because the array is in int.
 
 	}
 

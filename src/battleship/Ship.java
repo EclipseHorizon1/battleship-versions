@@ -24,13 +24,12 @@ public class Ship {
 	public int shipLength() {
 		return length;
 	}
-	
-	@Override
-public String toString() {
-	
-	return name;
-	
-}
 
+	@Override
+	public String toString() {
+
+		return name;
+
+	}
 
 }
