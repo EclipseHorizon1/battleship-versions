@@ -10,7 +10,7 @@ public class Ship {
 		name = "";
 		length = 0;
 		hits = 0;
-
+ 
 	}
 
 	public Ship(String shipName, int shipLength, int shipHits) {

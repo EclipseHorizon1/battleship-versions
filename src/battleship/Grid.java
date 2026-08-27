@@ -31,6 +31,10 @@ class MyCanvas extends JPanel implements ActionListener {
 
 	String xInput;
 	String yInput;
+	char yColumn;
+
+	Button horizontalButton, verticalButton;
+	boolean horizontal;
 
 	public void init() {
 
@@ -87,6 +91,26 @@ class MyCanvas extends JPanel implements ActionListener {
 		columnTextField.addActionListener(this);
 		add(columnTextField);
 
+		horizontalButton = new Button("Horizontal");
+
+		horizontalButton.setBackground(Color.lightGray);
+
+		horizontalButton.setBounds(50, 260, 200, 40); // (x start, y start, width, height)
+
+		horizontalButton.addActionListener(this);
+
+		add(horizontalButton);
+
+		verticalButton = new Button("Vertical");
+
+		verticalButton.setBackground(Color.lightGray);
+
+		verticalButton.setBounds(50, 310, 200, 40); // (x start, y start, width, height)
+
+		verticalButton.addActionListener(this);
+
+		add(verticalButton);
+
 		revalidate(); // This tells the internal system that there is a new drop down, so it needs to
 						// recalculate the stuff.
 		repaint(); // This paints the drop down on the window.
@@ -135,14 +159,41 @@ class MyCanvas extends JPanel implements ActionListener {
 		if (e.getSource() == columnTextField) {
 
 			String yInput = columnTextField.getText();
-			int yShipCoordinate = Integer.parseInt(yInput);
+			yInput = yInput.toUpperCase();
+			char yColumn = yInput.charAt(0);
+
+			if (yColumn >= 'A' && yColumn <= 'J') {
+				System.out.println("Valid");
+			} else {
+				System.out.println("Invalid");
+			}
+
+			int yShipCoordinate = yColumn - 'A';
+
 			System.out.println(yShipCoordinate);
 		}
 
-		// This block of code above checks if the input was on the column text field, it
-		// currently converts string to int, and prints the number on the
-		// console. later i will need to make it convert back to string to check if
-		// valid, then convert back to a int. Because the array is in int.
+		// This block of code checks if the input was from the column text field.
+		// It gets the text, converts it to upper case.
+		// then uses A-J as positions 0-9 in the array.
+		// It checks if the input is within the A-J range.If it is, it prints "Valid";
+		// otherwise, it prints "Invalid".
+		// It then converts the letter to an integer by subtracting
+		// the character value of A (65) from the character value of the letter.
+		// e.g. C = 67 - A = 65 = 2.
+		// Therefore, column C corresponds to index 2 in the array.
+
+		if (e.getSource() == horizontalButton) {
+
+			horizontal = true;
+
+		}
+
+		if (e.getSource() == verticalButton) {
+
+			horizontal = false;
+
+		}
 
 	}
 
@@ -210,7 +261,7 @@ public class Grid {
 
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		window.setBounds(30, 30, 1330, 600); // Use this to change the window size
+		window.setBounds(30, 30, 400, 600); // Use this to change the window size
 
 		window.setExtendedState(JFrame.MAXIMIZED_BOTH); // Use this to make the window full screen automatically
 
