@@ -23,8 +23,8 @@ class MyCanvas extends JPanel implements ActionListener {
 	int selectedShipLength;
 	JComboBox<Ship> shipDropdown; // declare that this is the variable for the drop down and it will contain
 									// strings.
-	JTextField rowTextField; // declare that these will be text fields.
-	JTextField columnTextField;
+	JTextField xTextField; // declare that these will be text fields.
+	JTextField yTextField;
 
 	int xShipCoordinate;
 	int yShipCoordinate;
@@ -35,6 +35,8 @@ class MyCanvas extends JPanel implements ActionListener {
 
 	Button horizontalButton, verticalButton;
 	boolean horizontal;
+	boolean hBoundary;
+	boolean vBoundary;
 
 	public void init() {
 
@@ -79,17 +81,17 @@ class MyCanvas extends JPanel implements ActionListener {
 		shipDropdown.addActionListener(this); // this calls on the action listener methods to do something.
 		add(shipDropdown); // This adds the drop down to the window
 
-		rowTextField = new JTextField(); // This adds the text fields and determines the bakcground,bounds and location
-		rowTextField.setBackground(new Color(230, 230, 230));
-		rowTextField.setBounds(50, 160, 200, 40);
-		rowTextField.addActionListener(this);
-		add(rowTextField);
+		xTextField = new JTextField(); // This adds the text fields and determines the bakcground,bounds and location
+		xTextField.setBackground(new Color(230, 230, 230));
+		xTextField.setBounds(50, 160, 200, 40);
+		xTextField.addActionListener(this);
+		add(xTextField);
 
-		columnTextField = new JTextField();// this does the same a the row text field.
-		columnTextField.setBackground(new Color(230, 230, 230));
-		columnTextField.setBounds(50, 210, 200, 40);
-		columnTextField.addActionListener(this);
-		add(columnTextField);
+		yTextField = new JTextField();// this does the same a the row text field.
+		yTextField.setBackground(new Color(230, 230, 230));
+		yTextField.setBounds(50, 210, 200, 40);
+		yTextField.addActionListener(this);
+		add(yTextField);
 
 		horizontalButton = new Button("Horizontal");
 
@@ -137,10 +139,10 @@ class MyCanvas extends JPanel implements ActionListener {
 		// This block of code above checks if the input was on the dropdown, then it
 		// converts the string to int and stores in the variable.
 
-		if (e.getSource() == rowTextField) {
+		if (e.getSource() == xTextField) {
 
-			String xInput = rowTextField.getText();
-			int xShipCoordinate = Integer.parseInt(xInput);
+			String xInput = xTextField.getText();
+			xShipCoordinate = Integer.parseInt(xInput);
 
 			System.out.println(xShipCoordinate);
 
@@ -156,9 +158,9 @@ class MyCanvas extends JPanel implements ActionListener {
 		// converts the string to an int, then prints the number on the console
 		// It also checks if the input number was valid or invalid.
 
-		if (e.getSource() == columnTextField) {
+		if (e.getSource() == yTextField) {
 
-			String yInput = columnTextField.getText();
+			String yInput = yTextField.getText();
 			yInput = yInput.toUpperCase();
 			char yColumn = yInput.charAt(0);
 
@@ -168,7 +170,7 @@ class MyCanvas extends JPanel implements ActionListener {
 				System.out.println("Invalid");
 			}
 
-			int yShipCoordinate = yColumn - 'A';
+			yShipCoordinate = yColumn - 'A';
 
 			System.out.println(yShipCoordinate);
 		}
@@ -193,6 +195,24 @@ class MyCanvas extends JPanel implements ActionListener {
 
 			horizontal = false;
 
+		}
+		
+		
+		hBoundary = false;
+		vBoundary = false;
+
+		if (horizontal) {
+			if (xShipCoordinate + selectedShipLength - 1 >= 1 && xShipCoordinate + selectedShipLength - 1 <= 10) {
+
+				hBoundary = true;
+			}
+		}
+
+		if (!horizontal) {
+			if (yShipCoordinate + selectedShipLength - 1 >= 0 && yShipCoordinate + selectedShipLength - 1 <= 9) {
+
+				vBoundary = true;
+			}
 		}
 
 	}
