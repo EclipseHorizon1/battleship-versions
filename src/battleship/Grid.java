@@ -33,10 +33,12 @@ class MyCanvas extends JPanel implements ActionListener {
 	String yInput;
 	char yColumn;
 
-	Button horizontalButton, verticalButton;
+	Button horizontalButton, verticalButton, placeShip;
 	boolean horizontal;
 	boolean hBoundary;
 	boolean vBoundary;
+
+	boolean shipThere;
 
 	public void init() {
 
@@ -59,11 +61,6 @@ class MyCanvas extends JPanel implements ActionListener {
 				opponentGrid[row][col] = 0;
 			}
 		}
-
-		playerGrid[0][1] = 1;
-		playerGrid[1][0] = 1;
-		playerGrid[2][1] = 1;
-		playerGrid[1][2] = 1;
 
 		setLayout(null); // this is here so that it doesn't use the default coordinates of the system for
 							// the drop down.
@@ -112,6 +109,16 @@ class MyCanvas extends JPanel implements ActionListener {
 		verticalButton.addActionListener(this);
 
 		add(verticalButton);
+
+		placeShip = new Button("Place Ship");
+
+		placeShip.setBackground(Color.lightGray);
+
+		placeShip.setBounds(50, 360, 200, 40); // (x start, y start, width, height)
+
+		placeShip.addActionListener(this);
+
+		add(placeShip);
 
 		revalidate(); // This tells the internal system that there is a new drop down, so it needs to
 						// recalculate the stuff.
@@ -196,23 +203,68 @@ class MyCanvas extends JPanel implements ActionListener {
 			horizontal = false;
 
 		}
-		
-		
-		hBoundary = false;
-		vBoundary = false;
 
-		if (horizontal) {
-			if (xShipCoordinate + selectedShipLength - 1 >= 1 && xShipCoordinate + selectedShipLength - 1 <= 10) {
+		if (e.getSource() == placeShip) {
 
-				hBoundary = true;
+			hBoundary = false;
+			vBoundary = false;
+
+			if (horizontal) {
+				if (xShipCoordinate + selectedShipLength - 1 >= 1 && xShipCoordinate + selectedShipLength - 1 <= 10) {
+
+					hBoundary = true;
+				}
 			}
-		}
 
-		if (!horizontal) {
-			if (yShipCoordinate + selectedShipLength - 1 >= 0 && yShipCoordinate + selectedShipLength - 1 <= 9) {
+			if (!horizontal) {
+				if (yShipCoordinate + selectedShipLength - 1 >= 0 && yShipCoordinate + selectedShipLength - 1 <= 9) {
 
-				vBoundary = true;
+					vBoundary = true;
+				}
 			}
+
+			shipThere = false;
+			if (horizontal) {
+				for (int i = 0; i < selectedShipLength; i++) {
+
+					if (playerGrid[yShipCoordinate][xShipCoordinate - 1 + i] == 1) {
+
+						shipThere = true;
+
+					}
+				}
+			}
+
+			if (!horizontal) {
+				for (int i = 0; i < selectedShipLength; i++) {
+					if (playerGrid[yShipCoordinate + i][xShipCoordinate - 1] == 1) {
+						shipThere = true;
+					}
+				}
+
+			}
+
+			if ((hBoundary || vBoundary) && !shipThere) {
+
+				if (horizontal) {
+					for (int i = 0; i < selectedShipLength; i++) {
+
+						playerGrid[yShipCoordinate][xShipCoordinate - 1 + i] = 1;
+
+					}
+
+				}
+
+				if (!horizontal) {
+					for (int i = 0; i < selectedShipLength; i++) {
+
+						playerGrid[yShipCoordinate + i][xShipCoordinate - 1] = 1;
+					}
+				}
+
+				repaint();
+			}
+
 		}
 
 	}
@@ -243,7 +295,7 @@ class MyCanvas extends JPanel implements ActionListener {
 				if (playerGrid[row][col] == 1) {
 					g.setColor(Color.DARK_GRAY); // Ship
 				} else {
-					g.setColor(Color.CYAN); // Water
+					g.setColor(new Color(68, 167, 196)); // Water
 				}
 
 				g.fillRect(x, y, sqrSize, sqrSize);
@@ -260,7 +312,7 @@ class MyCanvas extends JPanel implements ActionListener {
 				int x = opponentGridOffset + (col * sqrSize);
 				int y = gridsYoffset + (row * sqrSize);
 
-				g.setColor(Color.CYAN); // Default opponent water
+				g.setColor(new Color(68, 167, 196)); // Default opponent water
 				g.fillRect(x, y, sqrSize, sqrSize);
 				g.setColor(Color.BLACK);
 				g.drawRect(x, y, sqrSize, sqrSize);
