@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.JLabel;
 import javax.swing.JFrame;
 
 import java.awt.event.*;
@@ -25,6 +26,8 @@ class MyCanvas extends JPanel implements ActionListener {
 									// strings.
 	JTextField xTextField; // declare that these will be text fields.
 	JTextField yTextField;
+
+	JLabel placementLabel;
 
 	int xShipCoordinate;
 	int yShipCoordinate;
@@ -62,6 +65,10 @@ class MyCanvas extends JPanel implements ActionListener {
 			}
 		}
 
+		opponentGrid[0][1] = 1;
+		opponentGrid[1][0] = 1;
+		opponentGrid[2][1] = 1;
+		opponentGrid[1][2] = 1;
 		setLayout(null); // this is here so that it doesn't use the default coordinates of the system for
 							// the drop down.
 							// it allows me to place my own custom position.
@@ -120,6 +127,10 @@ class MyCanvas extends JPanel implements ActionListener {
 
 		add(placeShip);
 
+		placementLabel = new JLabel("");
+		placementLabel.setBounds(50, 430, 250, 30);
+		add(placementLabel);
+
 		revalidate(); // This tells the internal system that there is a new drop down, so it needs to
 						// recalculate the stuff.
 		repaint(); // This paints the drop down on the window.
@@ -139,12 +150,15 @@ class MyCanvas extends JPanel implements ActionListener {
 
 		if (e.getSource() == shipDropdown) {
 
-			selectedShipLength = ((Ship) shipDropdown.getSelectedItem()).shipLength();
-			System.out.println(selectedShipLength);
+			if (shipDropdown.getSelectedItem() != null) {
+
+				selectedShipLength = ((Ship) shipDropdown.getSelectedItem()).shipLength();
+				System.out.println(selectedShipLength);
+			}
 		}
 
 		// This block of code above checks if the input was on the dropdown, then it
-		// converts the string to int and stores in the variable.
+		// stores the lenght in the variable.
 
 		if (e.getSource() == xTextField) {
 
@@ -204,6 +218,10 @@ class MyCanvas extends JPanel implements ActionListener {
 
 		}
 
+		// This block of code above check if the horizontal or vertical button was
+		// pressed. If horizontal was pressed then horizontal is true
+		// If vertical button was pressed then horizontal is false.
+
 		if (e.getSource() == placeShip) {
 
 			hBoundary = false;
@@ -223,26 +241,47 @@ class MyCanvas extends JPanel implements ActionListener {
 				}
 			}
 
-			shipThere = false;
-			if (horizontal) {
-				for (int i = 0; i < selectedShipLength; i++) {
+			// These blocks of code above checks if the ship is within the boundary of the
+			// grid.
+			// It takes the ship coordinate and the ship length minus 1, then checks if that
+			// number is equal or between 1-10 for x, and 0-9 for y.
+			// This is because the letter text field sees A as 0 and J as 9. While the
+			// number text field
+			// can easily check if the number is between 1-10
 
-					if (playerGrid[yShipCoordinate][xShipCoordinate - 1 + i] == 1) {
+			shipThere = false; // sets everywhere as empty or "no ship there"
 
-						shipThere = true;
+			if (hBoundary || vBoundary) {
 
+				if (horizontal) {
+					for (int i = 0; i < selectedShipLength; i++) {
+
+						if (playerGrid[yShipCoordinate][xShipCoordinate - 1 + i] == 1) {
+
+							shipThere = true;
+
+						}
 					}
 				}
-			}
 
-			if (!horizontal) {
-				for (int i = 0; i < selectedShipLength; i++) {
-					if (playerGrid[yShipCoordinate + i][xShipCoordinate - 1] == 1) {
-						shipThere = true;
+				if (!horizontal) {
+					for (int i = 0; i < selectedShipLength; i++) {
+						if (playerGrid[yShipCoordinate + i][xShipCoordinate - 1] == 1) {
+							shipThere = true;
+						}
 					}
+
 				}
 
 			}
+
+			// This block of code above checks if the ship is within the boundaries of the
+			// grid
+			// If it is, then for horizontal, it gets the x ship length and increments it.
+			// Then if the x ship coordinate minus 1, plus i is exactly like 1 'Equality'.
+			// so if it is 1 it is true, so ''There is a ship there"
+			// For the vertical is the same thing but it adds i to the y ship coordinate and
+			// make it 1.
 
 			if ((hBoundary || vBoundary) && !shipThere) {
 
@@ -262,9 +301,53 @@ class MyCanvas extends JPanel implements ActionListener {
 					}
 				}
 
-				repaint();
-			}
+				// This block of code above checks if the horizontal boundary OR vertical
+				// boundary is true
+				// which means it is inside the grid boundary.
+				// AND if "There is not a ship there"
+				// Then for horizontal it assigns 1 to the y and x ship coordinates and length
+				// of the ship.
+				// Which triggers the block of code above this block, which changes makes the
+				// variable true
+				// so "there is a ship there".
+				// for vertical is the same thing, it makes the y ship coordinate plus the
+				// length assigned to 1
+				// which triggers the block of code above this and sets the variable to "there
+				// is a ship there"
 
+				xTextField.setText("");
+				yTextField.setText("");
+				shipDropdown.removeItem(shipDropdown.getSelectedItem());
+
+				if (shipDropdown.getItemCount() == 0) {
+
+					placementLabel.setText("All Ships Have Been Placed!");
+
+				} else {
+					placementLabel.setText("Ship Placed!");
+				}
+
+			} else {
+
+				placementLabel.setText("Invalid Placement");
+
+			}
+			repaint();
+
+			// This block of code do some stuff after the place button is pressed.
+			// It resets both text fields, it removes from the drop-down the ship you just
+			// placed.
+			// It gets the item count in the drop-down and if it is equal to 0.
+			// It displays a message that saying 'all ships have been placed'.
+			// and if it is not equal to 1, then i must mean that there is still a ship
+			// there.
+			// So it displays Ship placed.
+
+			// It can also display 'invalid placement' to ships that are not within the
+			// boundary
+			// and that are on top of another ship, and to those that are on a diagonal.
+			// That is why it is an else to the if that says if ((hBoundary || vBoundary) &&
+			// !shipThere)
 		}
 
 	}
@@ -312,7 +395,14 @@ class MyCanvas extends JPanel implements ActionListener {
 				int x = opponentGridOffset + (col * sqrSize);
 				int y = gridsYoffset + (row * sqrSize);
 
-				g.setColor(new Color(68, 167, 196)); // Default opponent water
+				if (opponentGrid[row][col] == 1) {
+					g.setColor(Color.DARK_GRAY); // Ship
+
+				} else {
+					g.setColor(new Color(68, 167, 196)); // Default opponent water
+
+				}
+
 				g.fillRect(x, y, sqrSize, sqrSize);
 				g.setColor(Color.BLACK);
 				g.drawRect(x, y, sqrSize, sqrSize);
