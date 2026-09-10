@@ -27,6 +27,9 @@ class MyCanvas extends JPanel implements ActionListener {
 	JTextField xTextField; // declare that these will be text fields.
 	JTextField yTextField;
 
+	JTextField atkXTextField;
+	JTextField atkYTextField;
+
 	JLabel placementLabel;
 
 	int xShipCoordinate;
@@ -36,7 +39,13 @@ class MyCanvas extends JPanel implements ActionListener {
 	String yInput;
 	char yColumn;
 
-	Button horizontalButton, verticalButton, placeShip;
+	String atkXInput;
+	String atkYInput;
+	char atkYColumn;
+	int atkXCoordinate;
+	int atkYCoordinate;
+
+	Button horizontalButton, verticalButton, placeShip, attack;
 	boolean horizontal;
 	boolean hBoundary;
 	boolean vBoundary;
@@ -53,7 +62,7 @@ class MyCanvas extends JPanel implements ActionListener {
 		opponentGrid = new int[10][10];
 
 		sqrSize = 40;
-		playerGridOffset = 480;
+		playerGridOffset = 300;
 		opponentGridOffset = 920;
 		gridsYoffset = 60;
 
@@ -85,7 +94,7 @@ class MyCanvas extends JPanel implements ActionListener {
 		shipDropdown.addActionListener(this); // this calls on the action listener methods to do something.
 		add(shipDropdown); // This adds the drop down to the window
 
-		xTextField = new JTextField(); // This adds the text fields and determines the bakcground,bounds and location
+		xTextField = new JTextField(); // This adds the text fields and determines the background,bounds and location
 		xTextField.setBackground(new Color(230, 230, 230));
 		xTextField.setBounds(50, 160, 200, 40);
 		xTextField.addActionListener(this);
@@ -126,6 +135,36 @@ class MyCanvas extends JPanel implements ActionListener {
 		placeShip.addActionListener(this);
 
 		add(placeShip);
+
+		attack = new Button("Attack");
+
+		attack.setBackground(Color.lightGray);
+
+		attack.setBounds(710, 260, 200, 40);
+
+		attack.addActionListener(this);
+
+		add(attack);
+
+		atkXTextField = new JTextField();
+
+		atkXTextField.setBackground(new Color(230, 230, 230));
+
+		atkXTextField.setBounds(710, 160, 200, 40);
+
+		atkXTextField.addActionListener(this);
+
+		add(atkXTextField);
+
+		atkYTextField = new JTextField();
+
+		atkYTextField.setBackground(new Color(230, 230, 230));
+
+		atkYTextField.setBounds(710, 210, 200, 40);
+
+		atkYTextField.addActionListener(this);
+
+		add(atkYTextField);
 
 		placementLabel = new JLabel("");
 		placementLabel.setBounds(50, 430, 250, 30);
@@ -279,9 +318,8 @@ class MyCanvas extends JPanel implements ActionListener {
 			// grid
 			// If it is, then for horizontal, it gets the x ship length and increments it.
 			// Then if the x ship coordinate minus 1, plus i is exactly like 1 'Equality'.
-			// so if it is 1 it is true, so ''There is a ship there"
-			// For the vertical is the same thing but it adds i to the y ship coordinate and
-			// make it 1.
+			// it is true, so ''There is a ship there''
+			// For the vertical is the same thing but it adds i to the y ship coordinate.
 
 			if ((hBoundary || vBoundary) && !shipThere) {
 
@@ -350,6 +388,39 @@ class MyCanvas extends JPanel implements ActionListener {
 			// !shipThere)
 		}
 
+		if (e.getSource() == atkXTextField) {
+			atkXInput = atkXTextField.getText();
+			atkXCoordinate = Integer.parseInt(atkXInput);
+
+			System.out.println(atkXCoordinate);
+
+			if (atkXCoordinate >= 1 && atkXCoordinate <= 10) {
+				System.out.println("Valid");
+			} else {
+
+				System.out.println("Invalid");
+
+			}
+
+		}
+
+		if (e.getSource() == atkYTextField) {
+
+			atkYInput = atkYTextField.getText();
+			atkYInput = atkYInput.toUpperCase();
+			atkYColumn = atkYInput.charAt(0);
+
+			if (atkYColumn >= 'A' && atkYColumn <= 'J') {
+				System.out.println("Valid");
+			} else {
+				System.out.println("Invalid");
+			}
+
+			atkYCoordinate = atkYColumn - 'A';
+
+			System.out.println(atkYCoordinate);
+		}
+
 	}
 
 	public void paint(Graphics g) {
@@ -357,10 +428,10 @@ class MyCanvas extends JPanel implements ActionListener {
 		super.paint(g);
 
 		// put instructions for pretty stuff here
-
-		g.drawRect(450, 19, 901, 501); // Background rectangle
-		g.setColor(Color.LIGHT_GRAY);
-		g.fillRect(451, 20, 900, 500);
+		/*
+		 * g.drawRect(270, 19, 1076, 501); // Background rectangle
+		 * g.setColor(Color.LIGHT_GRAY); g.fillRect(271, 20, 1075, 500);
+		 */
 
 		g.setColor(Color.black); // Labels for the grids
 		g.setFont(new Font("ARIAL", Font.BOLD, 16));
@@ -374,7 +445,7 @@ class MyCanvas extends JPanel implements ActionListener {
 				int x = playerGridOffset + (col * sqrSize);
 				int y = gridsYoffset + (row * sqrSize);
 
-				// Read array data to decide block colour or if its a ship or not
+				// Read array data to decide block color or if its a ship or not
 				if (playerGrid[row][col] == 1) {
 					g.setColor(Color.DARK_GRAY); // Ship
 				} else {
