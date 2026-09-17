@@ -31,6 +31,7 @@ class MyCanvas extends JPanel implements ActionListener {
 	JTextField atkYTextField;
 
 	JLabel placementLabel;
+	JLabel atkLabel;
 
 	int xShipCoordinate;
 	int yShipCoordinate;
@@ -51,6 +52,14 @@ class MyCanvas extends JPanel implements ActionListener {
 	boolean vBoundary;
 
 	boolean shipThere;
+
+	int computerX;
+	int computerY;
+
+	int computerShipX;
+	int computerShipY;
+
+	boolean computerHorizontal, computerVertical;
 
 	public void init() {
 
@@ -166,8 +175,16 @@ class MyCanvas extends JPanel implements ActionListener {
 
 		add(atkYTextField);
 
+		atkLabel = new JLabel("");
+
+		atkLabel.setBounds(730, 300, 250, 30);
+
+		add(atkLabel);
+
 		placementLabel = new JLabel("");
+
 		placementLabel.setBounds(50, 430, 250, 30);
+
 		add(placementLabel);
 
 		revalidate(); // This tells the internal system that there is a new drop down, so it needs to
@@ -196,21 +213,25 @@ class MyCanvas extends JPanel implements ActionListener {
 			}
 		}
 
-		// This block of code above checks if the input was on the dropdown, then it
-		// stores the lenght in the variable.
+		// This block of code above checks if the input was on the drop down, then it
+		// stores the length in the variable.
 
 		if (e.getSource() == xTextField) {
 
 			String xInput = xTextField.getText();
-			xShipCoordinate = Integer.parseInt(xInput);
 
-			System.out.println(xShipCoordinate);
+			if (!xInput.isEmpty()) {
 
-			if (xShipCoordinate >= 1 && xShipCoordinate <= 10) {
-				System.out.println("Valid");
-			} else {
+				xShipCoordinate = Integer.parseInt(xInput);
 
-				System.out.println("Invalid");
+				System.out.println(xShipCoordinate);
+
+				if (xShipCoordinate >= 1 && xShipCoordinate <= 10) {
+					System.out.println("Valid");
+				} else {
+
+					System.out.println("Invalid");
+				}
 			}
 		}
 
@@ -221,18 +242,23 @@ class MyCanvas extends JPanel implements ActionListener {
 		if (e.getSource() == yTextField) {
 
 			String yInput = yTextField.getText();
-			yInput = yInput.toUpperCase();
-			char yColumn = yInput.charAt(0);
 
-			if (yColumn >= 'A' && yColumn <= 'J') {
-				System.out.println("Valid");
-			} else {
-				System.out.println("Invalid");
+			if (!yInput.isEmpty()) {
+
+				yInput = yInput.toUpperCase();
+				char yColumn = yInput.charAt(0);
+
+				if (yColumn >= 'A' && yColumn <= 'J') {
+					System.out.println("Valid");
+				} else {
+					System.out.println("Invalid");
+				}
+
+				yShipCoordinate = yColumn - 'A';
+
+				System.out.println(yShipCoordinate);
+
 			}
-
-			yShipCoordinate = yColumn - 'A';
-
-			System.out.println(yShipCoordinate);
 		}
 
 		// This block of code checks if the input was from the column text field.
@@ -263,111 +289,129 @@ class MyCanvas extends JPanel implements ActionListener {
 
 		if (e.getSource() == placeShip) {
 
-			hBoundary = false;
-			vBoundary = false;
+			xInput = xTextField.getText();
+			yInput = yTextField.getText();
 
-			if (horizontal) {
-				if (xShipCoordinate + selectedShipLength - 1 >= 1 && xShipCoordinate + selectedShipLength - 1 <= 10) {
+			if (!xInput.isEmpty() && !yInput.isEmpty()) {
 
-					hBoundary = true;
-				}
-			}
+				xShipCoordinate = Integer.parseInt(xInput);
 
-			if (!horizontal) {
-				if (yShipCoordinate + selectedShipLength - 1 >= 0 && yShipCoordinate + selectedShipLength - 1 <= 9) {
+				yInput = yInput.toUpperCase();
+				yColumn = yInput.charAt(0);
+				yShipCoordinate = yColumn - 'A';
 
-					vBoundary = true;
-				}
-			}
+				// This Block of code above I added so that you don't need to press enter on the
+				// text field.
 
-			// These blocks of code above checks if the ship is within the boundary of the
-			// grid.
-			// It takes the ship coordinate and the ship length minus 1, then checks if that
-			// number is equal or between 1-10 for x, and 0-9 for y.
-			// This is because the letter text field sees A as 0 and J as 9. While the
-			// number text field
-			// can easily check if the number is between 1-10
-
-			shipThere = false; // sets everywhere as empty or "no ship there"
-
-			if (hBoundary || vBoundary) {
+				hBoundary = false;
+				vBoundary = false;
 
 				if (horizontal) {
-					for (int i = 0; i < selectedShipLength; i++) {
+					if (xShipCoordinate + selectedShipLength - 1 >= 1
+							&& xShipCoordinate + selectedShipLength - 1 <= 10) {
 
-						if (playerGrid[yShipCoordinate][xShipCoordinate - 1 + i] == 1) {
-
-							shipThere = true;
-
-						}
+						hBoundary = true;
 					}
 				}
 
 				if (!horizontal) {
-					for (int i = 0; i < selectedShipLength; i++) {
-						if (playerGrid[yShipCoordinate + i][xShipCoordinate - 1] == 1) {
-							shipThere = true;
+					if (yShipCoordinate + selectedShipLength - 1 >= 0
+							&& yShipCoordinate + selectedShipLength - 1 <= 9) {
+
+						vBoundary = true;
+					}
+				}
+
+				// These blocks of code above checks if the ship is within the boundary of the
+				// grid.
+				// It takes the ship coordinate and the ship length minus 1, then checks if that
+				// number is equal or between 1-10 for x, and 0-9 for y.
+				// This is because the letter text field sees A as 0 and J as 9. While the
+				// number text field
+				// can easily check if the number is between 1-10
+
+				shipThere = false; // sets everywhere as empty or "no ship there"
+
+				if (hBoundary || vBoundary) {
+
+					if (horizontal) {
+						for (int i = 0; i < selectedShipLength; i++) {
+
+							if (playerGrid[yShipCoordinate][xShipCoordinate - 1 + i] == 1) {
+
+								shipThere = true;
+
+							}
 						}
 					}
 
-				}
-
-			}
-
-			// This block of code above checks if the ship is within the boundaries of the
-			// grid
-			// If it is, then for horizontal, it gets the x ship length and increments it.
-			// Then if the x ship coordinate minus 1, plus i is exactly like 1 'Equality'.
-			// it is true, so ''There is a ship there''
-			// For the vertical is the same thing but it adds i to the y ship coordinate.
-
-			if ((hBoundary || vBoundary) && !shipThere) {
-
-				if (horizontal) {
-					for (int i = 0; i < selectedShipLength; i++) {
-
-						playerGrid[yShipCoordinate][xShipCoordinate - 1 + i] = 1;
+					if (!horizontal) {
+						for (int i = 0; i < selectedShipLength; i++) {
+							if (playerGrid[yShipCoordinate + i][xShipCoordinate - 1] == 1) {
+								shipThere = true;
+							}
+						}
 
 					}
 
 				}
 
-				if (!horizontal) {
-					for (int i = 0; i < selectedShipLength; i++) {
+				// This block of code above checks if the ship is within the boundaries of the
+				// grid
+				// If it is, then for horizontal, it gets the x ship length and increments it.
+				// Then if the x ship coordinate minus 1, plus i is exactly like 1 'Equality'.
+				// it is true, so ''There is a ship there''
+				// For the vertical is the same thing but it adds i to the y ship coordinate.
 
-						playerGrid[yShipCoordinate + i][xShipCoordinate - 1] = 1;
+				if ((hBoundary || vBoundary) && !shipThere) {
+
+					if (horizontal) {
+						for (int i = 0; i < selectedShipLength; i++) {
+
+							playerGrid[yShipCoordinate][xShipCoordinate - 1 + i] = 1;
+
+						}
+
 					}
-				}
 
-				// This block of code above checks if the horizontal boundary OR vertical
-				// boundary is true
-				// which means it is inside the grid boundary.
-				// AND if "There is not a ship there"
-				// Then for horizontal it assigns 1 to the y and x ship coordinates and length
-				// of the ship.
-				// Which triggers the block of code above this block, which changes makes the
-				// variable true
-				// so "there is a ship there".
-				// for vertical is the same thing, it makes the y ship coordinate plus the
-				// length assigned to 1
-				// which triggers the block of code above this and sets the variable to "there
-				// is a ship there"
+					if (!horizontal) {
+						for (int i = 0; i < selectedShipLength; i++) {
 
-				xTextField.setText("");
-				yTextField.setText("");
-				shipDropdown.removeItem(shipDropdown.getSelectedItem());
+							playerGrid[yShipCoordinate + i][xShipCoordinate - 1] = 1;
+						}
+					}
 
-				if (shipDropdown.getItemCount() == 0) {
+					// This block of code above checks if the horizontal boundary OR vertical
+					// boundary is true
+					// which means it is inside the grid boundary.
+					// AND if "There is not a ship there"
+					// Then for horizontal it assigns 1 to the y and x ship coordinates and length
+					// of the ship.
+					// Which triggers the block of code above this block, which changes makes the
+					// variable true
+					// so "there is a ship there".
+					// for vertical is the same thing, it makes the y ship coordinate plus the
+					// length assigned to 1
+					// which triggers the block of code above this and sets the variable to "there
+					// is a ship there"
 
-					placementLabel.setText("All Ships Have Been Placed!");
+					xTextField.setText("");
+					yTextField.setText("");
+					shipDropdown.removeItem(shipDropdown.getSelectedItem());
+
+					if (shipDropdown.getItemCount() == 0) {
+
+						placementLabel.setText("All Ships Have Been Placed!");
+
+					} else {
+						placementLabel.setText("Ship Placed!");
+					}
 
 				} else {
-					placementLabel.setText("Ship Placed!");
+
+					placementLabel.setText("Invalid Placement");
+
 				}
-
-			} else {
-
-				placementLabel.setText("Invalid Placement");
 
 			}
 			repaint();
@@ -390,15 +434,19 @@ class MyCanvas extends JPanel implements ActionListener {
 
 		if (e.getSource() == atkXTextField) {
 			atkXInput = atkXTextField.getText();
-			atkXCoordinate = Integer.parseInt(atkXInput);
 
-			System.out.println(atkXCoordinate);
+			if (!atkXInput.isEmpty()) {
+				atkXCoordinate = Integer.parseInt(atkXInput);
 
-			if (atkXCoordinate >= 1 && atkXCoordinate <= 10) {
-				System.out.println("Valid");
-			} else {
+				System.out.println(atkXCoordinate);
 
-				System.out.println("Invalid");
+				if (atkXCoordinate >= 1 && atkXCoordinate <= 10) {
+					System.out.println("Valid");
+				} else {
+
+					System.out.println("Invalid");
+
+				}
 
 			}
 
@@ -407,19 +455,147 @@ class MyCanvas extends JPanel implements ActionListener {
 		if (e.getSource() == atkYTextField) {
 
 			atkYInput = atkYTextField.getText();
-			atkYInput = atkYInput.toUpperCase();
-			atkYColumn = atkYInput.charAt(0);
 
-			if (atkYColumn >= 'A' && atkYColumn <= 'J') {
-				System.out.println("Valid");
-			} else {
-				System.out.println("Invalid");
+			if (!atkYInput.isEmpty()) {
+				atkYInput = atkYInput.toUpperCase();
+				atkYColumn = atkYInput.charAt(0);
+
+				if (atkYColumn >= 'A' && atkYColumn <= 'J') {
+					System.out.println("Valid");
+				} else {
+					System.out.println("Invalid");
+				}
+
+				atkYCoordinate = atkYColumn - 'A';
+
+				System.out.println(atkYCoordinate);
 			}
 
-			atkYCoordinate = atkYColumn - 'A';
-
-			System.out.println(atkYCoordinate);
 		}
+
+		// This gets the Inputs from both attack text fields and it converts to Int.
+		// This is pretty much the same as the other text fields but with other variable
+		// names.
+
+		if (e.getSource() == attack) {
+
+			atkXInput = atkXTextField.getText();
+			atkYInput = atkYTextField.getText();
+
+			if (!atkXInput.isEmpty() && !atkYInput.isEmpty()) {
+
+				atkXCoordinate = Integer.parseInt(atkXInput); // Converts the input into int
+
+				atkYInput = atkYInput.toUpperCase();
+				atkYColumn = atkYInput.charAt(0);
+				atkYCoordinate = atkYColumn - 'A'; // Converts the string input into char
+
+				// I added this so that you don't need to press enter on the text field.
+
+				if (!atkYInput.isEmpty() && !atkXInput.isEmpty() && atkYColumn >= 'A' && atkYColumn <= 'J'
+						&& atkXCoordinate >= 1 && atkXCoordinate <= 10) {
+
+					System.out.println(atkXCoordinate);
+					System.out.println(atkYCoordinate);
+
+					// This IF above is pretty much saying that if the attack inputs are not empty
+					// and the x and y coordinates are within boundary
+					// print the attack coordinates on the console.
+					// and also run the next if
+
+					if (opponentGrid[atkYCoordinate][atkXCoordinate - 1] == 2
+							|| opponentGrid[atkYCoordinate][atkXCoordinate - 1] == 3) {
+
+						atkLabel.setText("You Already Attacked Here!!");
+
+						// This if above checks if the coordinates in the array are equal to 2 or 3, if
+						// yes, it means that was already attacked, and it displays on the label
+						// If no it runs the else
+
+					} else {
+
+						if (opponentGrid[atkYCoordinate][atkXCoordinate - 1] == 1) {
+
+							opponentGrid[atkYCoordinate][atkXCoordinate - 1] = 2;
+							System.out.println("Hit");
+
+							atkXTextField.setText("");
+
+							atkYTextField.setText("");
+
+							atkLabel.setText("Hit!");
+
+							// This if above checks if the attack coordinates are equal to 1,
+							// if yes then make it equal to 2, and display 'Hit' on the console
+							// and on the label
+							// it also resets the attack text fields
+							// if the coordinates are not equal to 1 then it must be 0
+							// which means there is not a ship there
+							// in this case it runs the else below
+
+						} else {
+
+							opponentGrid[atkYCoordinate][atkXCoordinate - 1] = 3;
+
+							System.out.println("Miss");
+							atkXTextField.setText("");
+							atkYTextField.setText("");
+
+							atkLabel.setText("Miss");
+						}
+
+						// this else above makes the attack coordinates equal to 3, which is a miss
+						// it displays a 'miss' on the console and on the label
+						// it also resets the text fields
+
+						computerX = (int) (Math.random() * 10);
+						computerY = (int) (Math.random() * 10);
+						System.out.println(computerX);
+						System.out.println(computerY);
+
+						System.out.println(playerGrid[computerY][computerX]);
+
+						while (playerGrid[computerY][computerX] == 2 || playerGrid[computerY][computerX] == 3) {
+
+							computerX = (int) (Math.random() * 10);
+							computerY = (int) (Math.random() * 10);
+
+						}
+
+						// This block of code above generates random numbers to fit within the boundary
+						// then it prints the coordinates in the console
+						// these are the coordinates the computer choose to attack you
+						// Then the WHILE, makes it generate a new coordinate after i attack
+
+						if (playerGrid[computerY][computerX] == 1) {
+
+							playerGrid[computerY][computerX] = 2;
+							System.out.println("You were Hit");
+						} else if (playerGrid[computerY][computerX] == 0) {
+
+							playerGrid[computerY][computerX] = 3;
+							System.out.println("Your Opponent Missed");
+						}
+
+					}
+
+					// This block of code above runs if the coordinates the computer chose is equal
+					// to 1. if it is, then it prints a message on the console saying that i was hit
+					// else if the coordinates are equal to 0 then the opponent missed
+					// and it prints on the console as well
+
+				} else {
+
+					atkLabel.setText("Invalid Coordinates!");
+				}
+				
+				//This label appears if the attack coordinates are invalid
+
+			}
+
+		}
+
+		repaint();
 
 	}
 
@@ -448,8 +624,18 @@ class MyCanvas extends JPanel implements ActionListener {
 				// Read array data to decide block color or if its a ship or not
 				if (playerGrid[row][col] == 1) {
 					g.setColor(Color.DARK_GRAY); // Ship
+
+				} else if (playerGrid[row][col] == 2) {
+
+					g.setColor(Color.green); // Hit ship
+
+				} else if (playerGrid[row][col] == 3) {
+
+					g.setColor(Color.red); // Miss ship
+
 				} else {
-					g.setColor(new Color(68, 167, 196)); // Water
+					g.setColor(new Color(68, 167, 196)); // Default water
+
 				}
 
 				g.fillRect(x, y, sqrSize, sqrSize);
@@ -468,6 +654,14 @@ class MyCanvas extends JPanel implements ActionListener {
 
 				if (opponentGrid[row][col] == 1) {
 					g.setColor(Color.DARK_GRAY); // Ship
+
+				} else if (opponentGrid[row][col] == 2) {
+
+					g.setColor(Color.green); // Hit ship
+
+				} else if (opponentGrid[row][col] == 3) {
+
+					g.setColor(Color.red); // Miss ship
 
 				} else {
 					g.setColor(new Color(68, 167, 196)); // Default opponent water
@@ -494,7 +688,7 @@ public class Grid {
 
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		window.setBounds(30, 30, 400, 600); // Use this to change the window size
+		window.setBounds(30, 30, 950, 600); // Use this to change the window size
 
 		window.setExtendedState(JFrame.MAXIMIZED_BOTH); // Use this to make the window full screen automatically
 
